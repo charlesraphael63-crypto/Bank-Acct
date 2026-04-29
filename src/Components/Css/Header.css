@@ -1,0 +1,45 @@
+.bankHeader {
+  width: 100%;
+  background: white;
+  border-bottom: 1px solid #eee;
+  padding: 15px 40px;
+  box-sizing: border-box;
+}
+
+.bankHeaderInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bankHeaderLogo {
+  color: #1a73e8;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.bankHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.bankHeaderUser {
+  font-size: 16px;
+  color: #333;
+}
+
+.bankHeaderLogout {
+  border: 1px solid #ccc;
+  background: white;
+  padding: 6px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.bankHeaderLogout:hover {
+  background: #f5f5f5;
+}
