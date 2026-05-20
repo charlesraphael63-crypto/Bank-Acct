@@ -1,32 +1,60 @@
 import React from "react";
 import "../Components/Css/LoginPage.css";
+import { GiLoincloth } from "react-icons/gi";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { useState } from "react";
 
 const LoginPage = () => {
   return (
-    <div>
-      <main className="login-container">
-        <section className="login-card">
-          <h1 className="login-title">Login</h1>
-
-          <form className="login-form">
+    <div className="auth-container">
+      <form className="authForm-container">
+        <div className="authTitle-container">
+          <nav className="authLogo-container">
+            <img className="imgLogo" src="/src/assets/react.svg" alt="logo" />
+            <p>Washington</p>
+          </nav>
+          <h2>Sign in to your account</h2>
+        </div>
+        <main className="authmain-container">
+          <section className="wrapAuth-container">
+            <label htmlFor="email">Email address</label>
             <input
               type="email"
-              placeholder="email address"
-              className="login-input"
+              name="email"
+              className="auth-input1"
+              placeholder="example@gmail.com"
+              required
             />
-            <input
-              type="password"
-              placeholder="password"
-              className="login-input"
-            />
+          </section>
+          <section className="wrapAuth-container">
+            <label htmlFor="password">Password</label>
+            <div className="authInput-container">
+              <input
+                type={"password"}
+                name="password"
+                className="auth-input"
+                placeholder="Enter your password"
+                required
+                onChange={""}
+              />
+              <button type="button" className="toggle_password"></button>
+            </div>
 
-            <button type="submit" className="login-button">
-              LOGIN
-            </button>
-          </form>
-          <button className="sign_up">Sign Up</button>
-        </section>
-      </main>
+            <div className="authCheck-container">
+              <input type="checkbox" className="auth-check" />
+              <span>Remember me</span>
+            </div>
+          </section>
+        </main>
+        <div className="authButton-container">
+          <button type="submit" className="auth-btn">
+            Sign in
+          </button>
+          <p>
+            Don't have an account? <span>Sign-up</span>
+          </p>
+        </div>
+      </form>
     </div>
   );
 };
