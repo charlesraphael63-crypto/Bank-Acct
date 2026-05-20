@@ -1,7 +1,9 @@
 import React, { useContext } from "react";
 import "./Css/Header.css";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const nav = useNavigate();
   return (
     <header className="bankHeader">
       <section className="bankHeaderInner">
@@ -10,7 +12,9 @@ const Header = () => {
         </div>
         <div className="bankHeaderRight">
           <span className="bankHeaderUser">John Doe</span>
-          <button className="bankHeaderLogout">Logout</button>
+          <button className="bankHeaderLogout" onClick={() => nav("/")}>
+            Logout
+          </button>
         </div>
       </section>
     </header>

@@ -3,15 +3,17 @@ import "../Components/Css/LoginPage.css";
 import { GiLoincloth } from "react-icons/gi";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+  const nav = useNavigate();
   return (
     <div className="auth-container">
       <form className="authForm-container">
         <div className="authTitle-container">
           <nav className="authLogo-container">
             <img className="imgLogo" src="/src/assets/react.svg" alt="logo" />
-            <p>Washington</p>
+            <p>The curve</p>
           </nav>
           <h2>Sign in to your account</h2>
         </div>
@@ -47,11 +49,16 @@ const LoginPage = () => {
           </section>
         </main>
         <div className="authButton-container">
-          <button type="submit" className="auth-btn">
+          <button
+            type="submit"
+            className="auth-btn"
+            onClick={() => nav("/landing-page")}
+          >
             Sign in
           </button>
           <p>
-            Don't have an account? <span>Sign-up</span>
+            Don't have an account?{" "}
+            <span onClick={() => nav("/signup-page")}>Sign-up</span>
           </p>
         </div>
       </form>

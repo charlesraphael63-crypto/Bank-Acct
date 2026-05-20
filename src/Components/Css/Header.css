@@ -2,7 +2,7 @@
   width: 100%;
   background: white;
   border-bottom: 1px solid #eee;
-  padding: 25px;
+  padding: 20px;
   box-sizing: border-box;
 }
 
@@ -10,6 +10,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 .bankHeaderLogo {

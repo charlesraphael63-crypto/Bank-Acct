@@ -1,7 +1,7 @@
 .bankHero {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   gap: 5rem;
   background: #f0f2f5;
   box-sizing: border-box;
@@ -217,4 +217,27 @@
   font-size: 14px;
   color: #1a7a3c;
   font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .bankHero {
+    gap: 1.5rem;
+    padding: 2rem;
+    align-items: start;
+  }
+  .bankHeroLeft {
+    width: 60%;
+
+    .bankTransferCard {
+      gap: 0.1rem;
+    }
+  }
+  .bankHeroRight {
+    width: 30%;
+    gap: 1rem;
+    .bankBalanceCard {
+      gap: 0.4rem;
+      padding: 1rem;
+    }
+  }
 }

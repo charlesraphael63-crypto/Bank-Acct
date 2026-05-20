@@ -112,7 +112,8 @@
           margin-top: 3px;
           .auth-check {
             cursor: pointer;
-            accent-color: "skybule";
+            accent-color: skyblue;
+            padding: 2px;
           }
           span {
             font-size: medium;
@@ -160,7 +161,7 @@
       padding: 3rem;
       border-radius: 12px;
       min-height: fit-content;
-      gap: 1.5rem;
+      gap: 1rem;
       width: 60%;
       .authLogo-container {
         gap: 10px;
