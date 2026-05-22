@@ -1,5 +1,6 @@
 import React from "react";
 import "../Components/Css/LoginPage.css";
+import axios from "axios";
 import { GiLoincloth } from "react-icons/gi";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
@@ -7,6 +8,88 @@ import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const nav = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [userInfo, setUserInfo] = useState({
+    emailAddress: "",
+    password: "",
+  });
+
+  const [errorMsg, setErrorMsg] = useState({
+    err: false,
+    name: "",
+    msg: "",
+  });
+  // const [errorMsg2, setErrorMsg2] = useState("");
+
+  const emailAddressRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const catchEmailAddress = (e) => {
+    const newEmailAddress = e.target.value;
+    setUserInfo({ ...userInfo, emailAddress: newEmailAddress });
+    if (newEmailAddress.trim() === "") {
+      setErrorMsg({
+        err: true,
+        name: "emailAddress",
+        msg: "You must add your emailAddress address",
+      });
+    } else if (!emailAddressRegex.test(newEmailAddress)) {
+      setErrorMsg({
+        err: true,
+        name: "emailAddress",
+        msg: "Please enter a valid emailAddress address",
+      });
+    } else {
+      setErrorMsg({ err: false, name: "", msg: "" });
+    }
+  };
+  const catchPassword = (e) => {
+    const newPassword = e.target.value;
+    const hasUpperCase = /[A-Z]/.test(newPassword);
+    const hasLowerCase = /[a-z]/.test(newPassword);
+    setUserInfo({ ...userInfo, password: newPassword });
+    if (newPassword.trim() === "") {
+      setErrorMsg({
+        err: true,
+        name: "password",
+        msg: "You must add your password",
+      });
+    } else {
+      setErrorMsg({ err: false, name: "", msg: "" });
+    }
+  };
+
+  // Working with Backend
+  console.log("USER INFO:", userInfo);
+  const BaseURL = import.meta.env.VITE_BASE_URL;
+  const handleChange = (e) => {
+    setUserInfo({
+      ...userInfo,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!userInfo.emailAddress || !userInfo.password) {
+      alert("Email and password are required");
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${BaseURL}/user/login`, userInfo);
+      console.log("Login success:", response.data);
+      alert("Login successful");
+      setUserInfo({
+        emailAddress: "",
+        password: "",
+      });
+      setIsLoading(false);
+    } catch (error) {
+      alert(error.response?.data?.message || "Login failed");
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="auth-container">
       <form className="authForm-container">
@@ -19,28 +102,43 @@ const LoginPage = () => {
         </div>
         <main className="authmain-container">
           <section className="wrapAuth-container">
-            <label htmlFor="email">Email address</label>
+            <label htmlFor="emailAddress">EmailAddress address</label>
             <input
-              type="email"
-              name="email"
+              type="emailAddress"
+              name="emailAddress"
               className="auth-input1"
               placeholder="example@gmail.com"
               required
+              onChange={catchEmailAddress}
             />
+            <span style={{ color: "blue" }}>
+              {errorMsg.msg && errorMsg.name === "emailAddress"
+                ? errorMsg.msg
+                : ""}
+            </span>
           </section>
           <section className="wrapAuth-container">
             <label htmlFor="password">Password</label>
             <div className="authInput-container">
               <input
-                type={"password"}
+                type={showPassword ? "text" : "password"}
                 name="password"
                 className="auth-input"
                 placeholder="Enter your password"
                 required
-                onChange={""}
+                onChange={catchPassword}
               />
-              <button type="button" className="toggle_password"></button>
+              <button
+                type="button"
+                className="toggle_password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
             </div>
+            <span style={{ color: "blue" }}>
+              {errorMsg.msg && errorMsg.name === "password" ? errorMsg.msg : ""}
+            </span>
 
             <div className="authCheck-container">
               <input type="checkbox" className="auth-check" />
@@ -53,8 +151,9 @@ const LoginPage = () => {
             type="submit"
             className="auth-btn"
             onClick={() => nav("/landing-page")}
+            disabled={isLoading}
           >
-            Sign in
+            {isLoading ? "Logging in..." : "Login"}
           </button>
           <p>
             Don't have an account?{" "}
