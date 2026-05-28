@@ -1,65 +1,83 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./Css/Hero.css";
 
 const Hero = () => {
-  return (
-    <section class="bankHero">
-      <div class="bankHeroLeft">
-        <div class="bankTransferCard">
-          <h2 class="bankTransferTitle">Transfer Funds</h2>
+  const BaseURL = import.meta.env.VITE_BASE_URL;
+  const [totalBalance, setTotalBalance] = useState(0.0);
 
-          <div class="bankFormGroup">
-            <label class="bankLabel">From Account</label>
-            <select class="bankSelect">
+  const fetchBalance = async () => {
+    try {
+      const res = await axios.get(`${BaseURL}totalBalance`);
+      setTotalBalance(res.data.totalBalance || 0);
+      console.log(res);
+    } catch (err) {
+      console.log("Error fetching balance:", err);
+    } finally {
+    }
+  };
+  useEffect(() => {
+    fetchBalance();
+  }, [BaseURL]);
+
+  return (
+    <section className="bankHero">
+      <div className="bankHeroLeft">
+        <div className="bankTransferCard">
+          <h2 className="bankTransferTitle">Transfer Funds</h2>
+
+          <div className="bankFormGroup">
+            <label className="bankLabel">From Account</label>
+            <select className="bankSelect">
               <option value="">Select an account</option>
             </select>
           </div>
 
-          <div class="bankFormGroup">
-            <label class="bankLabel">Recipient Email</label>
+          <div className="bankFormGroup">
+            <label className="bankLabel">Recipient Email</label>
             <input
-              class="bankInput"
+              className="bankInput"
               type="email"
               placeholder="E.g., jane@gmail.com"
             />
           </div>
 
-          <div class="bankFormGroup">
-            <label class="bankLabel">Recipient Account Number</label>
+          <div className="bankFormGroup">
+            <label className="bankLabel">Recipient Account Number</label>
             <input
-              class="bankInput"
+              className="bankInput"
               type="text"
               placeholder="E.g., 987654321"
             />
           </div>
 
-          <div class="bankFormGroup">
-            <label class="bankLabel">Amount (₦)</label>
-            <input class="bankInput" type="number" placeholder="₦ 0.00" />
+          <div className="bankFormGroup">
+            <label className="bankLabel">Amount (₦)</label>
+            <input className="bankInput" type="number" placeholder="₦ 0.00" />
           </div>
 
-          <div class="bankFormGroup">
-            <label class="bankLabel">Memo (Optional)</label>
+          <div className="bankFormGroup">
+            <label className="bankLabel">Memo (Optional)</label>
             <textarea
-              class="bankTextarea"
+              className="bankTextarea"
               placeholder="Rent, dinner, etc."
             ></textarea>
           </div>
 
-          <button class="bankSendBtn">Send Transfer</button>
+          <button className="bankSendBtn">Send Transfer</button>
         </div>
       </div>
 
-      <div class="bankHeroRight">
-        <div class="bankBalanceCard">
-          <p class="bankBalanceLabel">Available Balance</p>
-          <h1 class="bankBalanceAmount">₦0.00</h1>
-          <p class="bankBalanceAccounts">Account Holder</p>
+      <div className="bankHeroRight">
+        <div className="bankBalanceCard">
+          <p className="bankBalanceLabel">Available Balance</p>
+          <h1 className="bankBalanceAmount">{`₦${totalBalance.toFixed(2)}`}</h1>
+          <p className="bankBalanceAccounts">Account Holder</p>
         </div>
 
-        <div class="bankTransactionCard">
-          <h3 class="bankTransactionTitle">Transaction History</h3>
-          <p class="bankNoTx">No transactions yet.</p>
+        <div className="bankTransactionCard">
+          <h3 className="bankTransactionTitle">Transaction History</h3>
+          <p className="bankNoTx">No transactions yet.</p>
         </div>
       </div>
     </section>

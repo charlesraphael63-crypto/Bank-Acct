@@ -60,39 +60,53 @@ const LoginPage = () => {
   };
 
   // Working with Backend
-  console.log("USER INFO:", userInfo);
+  // console.log("USER INFO:", userInfo);
   const BaseURL = import.meta.env.VITE_BASE_URL;
-  const handleChange = (e) => {
-    setUserInfo({
-      ...userInfo,
-      [e.target.name]: e.target.value,
-    });
-  };
-  const handleSubmit = async (e) => {
+  // const handleChange = (e) => {
+  //   setUserInfo({
+  //     ...userInfo,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (!userInfo.emailAddress || !userInfo.password) {
+  //     alert("Email and password are required");
+  //     return;
+  //   }
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await axios.post(`${BaseURL}login`, userInfo);
+  //     // console.log("Login success:", response.data);
+  //     alert("Login successful");
+  //     setUserInfo({
+  //       emailAddress: "",
+  //       password: "",
+  //     });
+  //     setIsLoading(false);
+  //   } catch (error) {
+  //     alert(error.response?.data?.message || "Login failed");
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  const handleSubmit2 = async (e) => {
     e.preventDefault();
-    if (!userInfo.emailAddress || !userInfo.password) {
-      alert("Email and password are required");
-      return;
-    }
-    setIsLoading(true);
     try {
-      const response = await axios.post(`${BaseURL}/user/login`, userInfo);
-      console.log("Login success:", response.data);
-      alert("Login successful");
-      setUserInfo({
-        emailAddress: "",
-        password: "",
-      });
-      setIsLoading(false);
+      const res = await axios.post(`${BaseURL}login`, userInfo);
+      localStorage.setItem("token", res.data.token);
+      if (res.status === Number(import.meta.env.VITE_status)) {
+        nav("/landing-page");
+      }
+      alert(res.data.message);
     } catch (error) {
-      alert(error.response?.data?.message || "Login failed");
-      setIsLoading(false);
+      console.error(error);
     }
   };
 
   return (
     <div className="auth-container">
-      <form className="authForm-container">
+      <main className="authForm-container">
         <div className="authTitle-container">
           <nav className="authLogo-container">
             <img className="imgLogo" src="/src/assets/react.svg" alt="logo" />
@@ -100,11 +114,12 @@ const LoginPage = () => {
           </nav>
           <h2>Sign in to your account</h2>
         </div>
-        <main className="authmain-container">
+        <form className="authmain-container" onSubmit={handleSubmit2}>
           <section className="wrapAuth-container">
-            <label htmlFor="emailAddress">EmailAddress address</label>
+            <label htmlFor="emailAddress">EmailAddress</label>
             <input
               type="emailAddress"
+              id="emailAddress"
               name="emailAddress"
               className="auth-input1"
               placeholder="example@gmail.com"
@@ -122,6 +137,7 @@ const LoginPage = () => {
             <div className="authInput-container">
               <input
                 type={showPassword ? "text" : "password"}
+                id="password"
                 name="password"
                 className="auth-input"
                 placeholder="Enter your password"
@@ -145,22 +161,17 @@ const LoginPage = () => {
               <span>Remember me</span>
             </div>
           </section>
-        </main>
-        <div className="authButton-container">
-          <button
-            type="submit"
-            className="auth-btn"
-            onClick={() => nav("/landing-page")}
-            disabled={isLoading}
-          >
-            {isLoading ? "Logging in..." : "Login"}
-          </button>
-          <p>
-            Don't have an account?{" "}
-            <span onClick={() => nav("/signup-page")}>Sign-up</span>
-          </p>
-        </div>
-      </form>
+          <div className="authButton-container">
+            <button type="submit" className="auth-btn" disabled={isLoading}>
+              {isLoading ? "Logging in..." : "Login"}
+            </button>
+            <p>
+              Don't have an account?{" "}
+              <span onClick={() => nav("/signup-page")}>Sign-up</span>
+            </p>
+          </div>
+        </form>
+      </main>
     </div>
   );
 };
