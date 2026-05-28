@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ValidateInput1, ValidateInputs } from "../Lib/HigherFunction";
 
 const SignUpPage = () => {
   const nav = useNavigate();
@@ -11,23 +12,14 @@ const SignUpPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [userInfo, setUserInfo] = useState({
     fullName: "",
-    email: "",
+    emailAddress: "",
     password: "",
-    secPassword: "",
+    confirmPassword: "",
   });
   const [errorMsg, setErrorMsg] = useState({
     err: false,
     name: "",
     msg: "",
-  });
-
-  // Working with backend
-  const [Passmeet, setPassmeet] = useState({
-    length: false,
-    upper: false,
-    lower: false,
-    number: false,
-    special: false,
   });
 
   const [passwordStrength, setPasswordStrength] = useState({
@@ -130,21 +122,18 @@ const SignUpPage = () => {
 
     setUserInfo({
       ...userInfo,
-      email: newEmail,
+      emailAddress: newEmail,
     });
-
-    console.log(newEmail);
-
     if (newEmail.trim() === "") {
       setErrorMsg({
         err: true,
-        name: "email",
+        name: "emailAddress",
         msg: "Provide your email",
       });
     } else if (!emailRegex.test(newEmail)) {
       setErrorMsg({
         err: true,
-        name: "email",
+        name: "emailAddress",
         msg: "enter a valid email address",
       });
     } else {
@@ -160,21 +149,18 @@ const SignUpPage = () => {
 
     setUserInfo({
       ...userInfo,
-      secPassword: newPassword,
+      confirmPassword: newPassword,
     });
-
-    console.log(newPassword);
-
     if (newPassword.trim() === "") {
       setErrorMsg({
         err: true,
-        name: "secPassword",
+        name: "confirmPassword",
         msg: "Confirm your password",
       });
     } else if (newPassword !== userInfo.password) {
       setErrorMsg({
         err: true,
-        name: "secPassword",
+        name: "confirmPassword",
         msg: "Passwords do not match",
       });
     } else {
@@ -185,42 +171,102 @@ const SignUpPage = () => {
       });
     }
   };
+  const [Passmeet, setPassmeet] = useState({
+    length: false,
+    upper: false,
+    lower: false,
+    number: false,
+    special: false,
+  });
 
-  // cond't
-  const BaseURL = import.meta.env.VITE_BASE_URL;
-  const handleSubmit = async (e) => {
+  // Working with backend
+  const Base_Url = import.meta.env.VITE_BASE_URL;
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (
+  //     userInfo.fullName &&
+  //     userInfo.emailAddress &&
+  //     userInfo.password &&
+  //     userInfo.confirmPassword
+  //   ) {
+  //     try {
+  //       setIsLoading(true);
+  //       const response = await axios.post(`${BaseURL}register`, userInfo);
+  //       // console.log("this is the url", response);
+  //       alert("Signup successful! You can now log in.");
+  //       setUserInfo({
+  //         fullName: "",
+  //         emailAddress: "",
+  //         password: "",
+  //         confirmPassword: "",
+  //       });
+  //       setIsLoading(false);
+  //       nav("/landing-page");
+  //     } catch (error) {
+  //       console.log(error.response?.data || error.message);
+  //       setIsLoading(false);
+  //     }
+  //   } else {
+  //     alert("Please fix the errors in the form below before submitting.");
+  //   }
+  // };
+
+  // const handleSubmit2 = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     if (ValidateInputs(userInfo, errorMsg, setErrorMsg)) {
+  //       const res = await axios.post(`${BaseURL}register`, userInfo);
+  //       alert(res.data.message);
+  //       if (res.status === 201 || res.status === 200) {
+  //         nav("/");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     alert(error.response?.data?.message);
+  //     console.log(error);
+  //   }
+  // };
+
+  const handleSubmitRequest = async (e) => {
     e.preventDefault();
-    if (
-      userInfo.fullName &&
-      userInfo.email &&
-      userInfo.password &&
-      userInfo.secPassword
-    ) {
-      try {
-        setIsLoading(true);
-        const response = await axios.post(`${BaseURL}/register`, userInfo);
-        console.log("this is the url", response);
-        alert("Signup successful! You can now log in.");
-        setUserInfo({
-          fullName: "",
-          email: "",
-          password: "",
-          secPassword: "",
-        });
-        setIsLoading(false);
-        nav("/landing-page");
-      } catch (error) {
-        console.log(error.response?.data || error.message);
-        setIsLoading(false);
+    try {
+      setIsLoading(true);
+      if (ValidateInput1(errorMsg, setErrorMsg, userInfo)) {
+        const res = await axios.post(`${Base_Url}register`, userInfo);
+        console.log(res);
       }
-    } else {
-      alert("Please fix the errors in the form below before submitting.");
+    } catch (error) {
+      console.log(error);
     }
   };
 
+  // const handleSubmitRequest = async (e) => {
+  //   e.preventDefault();
+  //   console.log("Submitting:", userInfo);
+
+  //   if (!ValidateInput1(userInfo, setErrorMsg, errorMsg)) {
+  //     console.log("Validation failed");
+  //     return;
+  //   }
+
+  //   try {
+  //     const res = await axios.post(`${BASE_URL}register`, userInfo);
+  //     console.log("Response:", res);
+  //     console.log("Data:", res.data);
+  //   } catch (error) {
+  //     console.log(
+  //       "Request failed:",
+  //       error.response?.status,
+  //       error.response?.data,
+  //     );
+  //   }
+  // };
+  // useEffect(() => handleSubmitRequest(), []);
+
   return (
     <div className="auth-container">
-      <form className="authForm-container" onSubmit={handleSubmit}>
+      <main className="authForm-container">
         <div className="authTitle-container">
           <nav className="authLogo-container">
             <img className="imgLogo" src="/src/assets/react.svg" alt="logo" />
@@ -229,12 +275,13 @@ const SignUpPage = () => {
           <h2>Sign up for your account</h2>
         </div>
 
-        <main className="authmain-container">
+        <form className="authmain-container" onSubmit={handleSubmitRequest}>
           <section className="wrapAuth-container">
-            <label htmlFor="name">Full-name</label>
+            <label htmlFor="fullName">Full-name</label>
             <input
               type="text"
-              name="name"
+              id="fullName"
+              name="fullName"
               className="auth-input1"
               placeholder="enter your full name"
               required
@@ -247,18 +294,21 @@ const SignUpPage = () => {
           </section>
 
           <section className="wrapAuth-container">
-            <label htmlFor="email">Email address</label>
+            <label htmlFor="emailAddress">Email address</label>
             <input
               type="email"
-              name="email"
+              id="emailAddress"
+              name="emailAddress"
               className="auth-input1"
               placeholder="example@gmail.com"
               required
-              value={userInfo.email}
+              value={userInfo.emailAddress}
               onChange={catchEmail}
             />
             <span style={{ color: "red" }}>
-              {errorMsg.msg && errorMsg.name === "email" ? errorMsg.msg : ""}
+              {errorMsg.msg && errorMsg.name === "emailAddress"
+                ? errorMsg.msg
+                : ""}
             </span>
           </section>
 
@@ -267,6 +317,7 @@ const SignUpPage = () => {
             <div className="authInput-container">
               <input
                 type={showPassword ? "text" : "password"}
+                id="password"
                 name="password"
                 className="auth-input"
                 placeholder="enter your password"
@@ -374,15 +425,16 @@ const SignUpPage = () => {
           </section>
 
           <section className="wrapAuth-container">
-            <label htmlFor="password">Confirm Password</label>
+            <label htmlFor="confirmPassword">Confirm Password</label>
             <div className="authInput-container">
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                name="secPassword"
+                id="confirmPassword"
+                name="confirmPassword"
                 className="auth-input"
                 placeholder="Enter your password"
                 required
-                value={userInfo.secPassword}
+                value={userInfo.confirmPassword}
                 onChange={catchPasswordConfirm}
               />
               <button
@@ -394,7 +446,7 @@ const SignUpPage = () => {
               </button>
             </div>
             <span style={{ color: "red" }}>
-              {errorMsg.msg && errorMsg.name === "secPassword"
+              {errorMsg.msg && errorMsg.name === "confirmPassword"
                 ? errorMsg.msg
                 : ""}
             </span>
@@ -403,16 +455,17 @@ const SignUpPage = () => {
               <span>Remember me</span>
             </div>
           </section>
-        </main>
-        <div className="authButton-container">
-          <button type="submit" className="auth-btn" disabled={isLoading}>
-            {isLoading ? "Loading..." : "Sign up"}
-          </button>
-          <p>
-            Don't have an account? <span onClick={() => nav("/")}>Sign-in</span>
-          </p>
-        </div>
-      </form>
+          <div className="authButton-container">
+            <button type="submit" className="auth-btn" disabled={isLoading}>
+              {isLoading ? "Loading..." : "Sign up"}
+            </button>
+            <p>
+              Already have an account?{" "}
+              <span onClick={() => nav("/")}>Sign-in</span>
+            </p>
+          </div>
+        </form>
+      </main>
     </div>
   );
 };
